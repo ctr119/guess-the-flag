@@ -10,6 +10,10 @@ struct ContentView: View {
     @State private var scoreMessage = ""
     @State private var score = 0
     
+    private static let numberOfQuestions = 2
+    @State private var questionsLeft = Self.numberOfQuestions
+    @State private var showingEndGame = false
+    
     var body: some View {
         ZStack {
             gameBackground
@@ -35,6 +39,9 @@ struct ContentView: View {
         } message: {
             Text(scoreMessage.isEmpty ? "Your score is \(score)" : "\(scoreMessage)\n\nYour score is \(score)")
         }
+        .alert("Game is Over!", isPresented: $showingEndGame, actions: {
+            Button("Restart game", action: reset)
+        }, message: resetMessage)
     }
     
     private var gameBackground: some View {
@@ -101,13 +108,29 @@ struct ContentView: View {
         }
         
         showingScore = true
+        questionsLeft -= 1
     }
     
     private func askQuestion() {
+        if questionsLeft == 0 {
+            showingEndGame = true
+            return
+        }
+        
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
+    
+    private func reset() {
+        questionsLeft = Self.numberOfQuestions
+        score = 0
+        
+        askQuestion()
+    }
 
+    private func resetMessage() -> some View {
+        Text("You already went through all the questions.\n Your final score is:\n\(score) out of \(Self.numberOfQuestions)")
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
