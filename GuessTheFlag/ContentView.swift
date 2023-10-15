@@ -10,8 +10,9 @@ struct ContentView: View {
     @State private var scoreMessage = ""
     @State private var score = 0
     
-    private static let numberOfQuestions = 2
+    private static let numberOfQuestions = 8
     @State private var questionsLeft = Self.numberOfQuestions
+    @State private var questionIndex = 1
     @State private var showingEndGame = false
     
     var body: some View {
@@ -78,10 +79,13 @@ struct ContentView: View {
                         .shadow(radius: 5)
                 }
             }
+            
+            Text("Question \(questionIndex)/\(Self.numberOfQuestions)")
+                .font(.subheadline.weight(.heavy))
+                .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 20)
-        .padding(.bottom, 10)
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20))
     }
@@ -117,12 +121,14 @@ struct ContentView: View {
             return
         }
         
+        questionIndex += 1
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
     }
     
     private func reset() {
         questionsLeft = Self.numberOfQuestions
+        questionIndex = 0
         score = 0
         
         askQuestion()
