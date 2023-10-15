@@ -19,42 +19,14 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 
-                Text("Guess the Flag")
-                    .font(.largeTitle.weight(.bold))
-                    .foregroundStyle(.white)
+                gameTitle
                 
-                VStack(spacing: 15) {
-                    VStack {
-                        Text("Tap the flag of")
-                            .font(.subheadline.weight(.heavy))
-                            .foregroundStyle(.secondary)
-                        
-                        Text(countries[correctAnswer])
-                            .font(.largeTitle.weight(.semibold))
-                    }
-                    
-                    ForEach(0..<3) { number in
-                        Button {
-                            flagTapped(number)
-                        } label: {
-                            Image(countries[number])
-                                .clipShape(RoundedRectangle(cornerSize: .init(width: 10, height: 10)))
-                                .shadow(radius: 5)
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
-                .padding(.bottom, 10)
-                .background(.regularMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                boardGame
                 
                 Spacer()
                 Spacer()
                 
-                Text("Score: ???")
-                    .foregroundStyle(.white)
-                    .font(.title.bold())
+                scoreView
                 
                 Spacer()
             }
@@ -65,6 +37,46 @@ struct ContentView: View {
         } message: {
             Text("Your score is ???")
         }
+    }
+    
+    private var gameTitle: some View {
+        Text("Guess the Flag")
+            .font(.largeTitle.weight(.bold))
+            .foregroundStyle(.white)
+    }
+    
+    private var boardGame: some View {
+        VStack(spacing: 15) {
+            VStack {
+                Text("Tap the flag of")
+                    .font(.subheadline.weight(.heavy))
+                    .foregroundStyle(.secondary)
+                
+                Text(countries[correctAnswer])
+                    .font(.largeTitle.weight(.semibold))
+            }
+            
+            ForEach(0..<3) { number in
+                Button {
+                    flagTapped(number)
+                } label: {
+                    Image(countries[number])
+                        .clipShape(RoundedRectangle(cornerSize: .init(width: 10, height: 10)))
+                        .shadow(radius: 5)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 20)
+        .padding(.bottom, 10)
+        .background(.regularMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+    
+    private var scoreView: some View {
+        Text("Score: ???")
+            .foregroundStyle(.white)
+            .font(.title.bold())
     }
     
     private func flagTapped(_ number: Int) {
