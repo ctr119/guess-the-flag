@@ -15,6 +15,8 @@ struct ContentView: View {
     @State private var questionIndex = 1
     @State private var showingEndGame = false
     
+    @State private var flagRotations = [0.0, 0.0, 0.0]
+    
     var body: some View {
         ZStack {
             gameBackground
@@ -77,6 +79,7 @@ struct ContentView: View {
                     Image(countries[number])
                         .clipShape(RoundedRectangle(cornerSize: .init(width: 10, height: 10)))
                         .shadow(radius: 5)
+                        .rotation3DEffect(.degrees(flagRotations[number]), axis: (0, 1, 0))
                 }
             }
             
@@ -113,6 +116,10 @@ struct ContentView: View {
         
         showingScore = true
         questionsLeft -= 1
+        
+        withAnimation {
+            flagRotations[number] += 360
+        }
     }
     
     private func askQuestion() {
