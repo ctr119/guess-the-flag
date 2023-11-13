@@ -23,6 +23,8 @@ struct ContentView: View {
     @State private var flagScales = [1.0, 1.0, 1.0]
     private let flagScaleAmount = 0.85
     
+    @State private var selectedFlag: Int?
+    
     var body: some View {
         ZStack {
             gameBackground
@@ -85,9 +87,13 @@ struct ContentView: View {
                     Image(countries[number])
                         .clipShape(RoundedRectangle(cornerSize: .init(width: 10, height: 10)))
                         .shadow(radius: 5)
-                        .rotation3DEffect(.degrees(flagRotations[number]), axis: (0, 1, 0))
-                        .opacity(flagOpacities[number])
-                        .scaleEffect(flagScales[number])
+//                        .rotation3DEffect(.degrees(flagRotations[number]), axis: (0, 1, 0))
+                        .rotation3DEffect(selectedFlag != nil && selectedFlag == number ? .degrees(360) : .degrees(0), axis: (0,1,0))
+//                        .opacity(flagOpacities[number])
+                        .opacity(selectedFlag == nil || selectedFlag == number ? 1 : 0.25)
+//                        .scaleEffect(flagScales[number])
+                        .scaleEffect(selectedFlag == nil || selectedFlag == number ? 1: 0.85)
+                        .animation(.default, value: selectedFlag)
                 }
             }
             
@@ -112,6 +118,8 @@ struct ContentView: View {
     }
     
     private func didTapFlag(with number: Int) {
+        selectedFlag = number
+        
         if number == correctAnswer {
             scoreTitle = "Correct ✅"
             scoreMessage = ""
@@ -125,24 +133,25 @@ struct ContentView: View {
         showingScore = true
         questionsLeft -= 1
         
-        withAnimation {
-            flagRotations[number] += 360
-            
-            let secondFlagIndex = (number + 1) % 3
-            flagOpacities[secondFlagIndex] = flagOpacityAmount
-            flagScales[secondFlagIndex] = flagScaleAmount
-            
-            let thirdFlagIndex = (secondFlagIndex + 1) % 3
-            flagOpacities[thirdFlagIndex] = flagOpacityAmount
-            flagScales[thirdFlagIndex] = flagScaleAmount
-        }
+//        withAnimation {
+//            flagRotations[number] += 360
+//
+//            let secondFlagIndex = (number + 1) % 3
+//            flagOpacities[secondFlagIndex] = flagOpacityAmount
+//            flagScales[secondFlagIndex] = flagScaleAmount
+//
+//            let thirdFlagIndex = (secondFlagIndex + 1) % 3
+//            flagOpacities[thirdFlagIndex] = flagOpacityAmount
+//            flagScales[thirdFlagIndex] = flagScaleAmount
+//        }
     }
     
     private func askQuestion() {
-        withAnimation {
-            flagOpacities = flagOpacities.map { _ in 1.0 }
-            flagScales = flagScales.map { _ in 1.0 }
-        }
+        selectedFlag = nil
+//        withAnimation {
+//            flagOpacities = flagOpacities.map { _ in 1.0 }
+//            flagScales = flagScales.map { _ in 1.0 }
+//        }
         
         if questionsLeft == 0 {
             showingEndGame = true
