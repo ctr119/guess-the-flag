@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var showingEndGame = false
     
     @State private var flagRotations = [0.0, 0.0, 0.0]
+    @State private var flagOpacities = [1.0, 1.0, 1.0]
     
     var body: some View {
         ZStack {
@@ -80,6 +81,7 @@ struct ContentView: View {
                         .clipShape(RoundedRectangle(cornerSize: .init(width: 10, height: 10)))
                         .shadow(radius: 5)
                         .rotation3DEffect(.degrees(flagRotations[number]), axis: (0, 1, 0))
+                        .opacity(flagOpacities[number])
                 }
             }
             
@@ -119,10 +121,20 @@ struct ContentView: View {
         
         withAnimation {
             flagRotations[number] += 360
+            
+            let secondFlagIndex = (number + 1) % 3
+            flagOpacities[secondFlagIndex] = 0.25
+            
+            let thirdFlagIndex = (secondFlagIndex + 1) % 3
+            flagOpacities[thirdFlagIndex] = 0.25
         }
     }
     
     private func askQuestion() {
+        withAnimation {
+            flagOpacities = flagOpacities.map { _ in 1.0 }
+        }
+        
         if questionsLeft == 0 {
             showingEndGame = true
             return
